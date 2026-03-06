@@ -22,5 +22,8 @@ go.work.sum
 *.swp
 *.swo
 
+# Obsidian
+docs/.obsidian/
+
 # OS
 .DS_Store
