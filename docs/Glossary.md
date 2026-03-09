@@ -2,17 +2,15 @@
 
 **Flight** — A single drone mission over a defined area. Has a lifecycle from `scheduled` to `delivered`.
 
-**Quote** — A pricing request for a specific area + insight type. Becomes an order once confirmed.
+**Quote** — A pricing request for a specific area + insight type. Becomes a Flight once confirmed.
 
-**Geofence** — The geographic boundary of the area of interest, expressed as WKT (Well-Known Text) or a GeoJSON file.
+**Geofence** — The geographic boundary of the area of interest, expressed as a GeoJSON file.
 
-**Insight** — The type of processed output the customer wants: `orthomosaic`, `ndvi`, `3d-model`, `thermal`, etc.
+**Insight** — The type of processed output the customer wants: Roof mapping with CAD etc.
 
 **Gear** — Drones, cameras, and sensors registered to a pilot's profile.
 
-**Service** — A pre-packaged offering from a pilot (e.g. "Orthomosaic Survey — $500").
-
-**Order** — A confirmed purchase of a service, which creates a flight.
+**Service** — A pre-packaged offering from Inflight (e.g. "Roof Mapping with CAD — $500").
 
 **Pilot** — The person who flies the drone and uploads raw imagery.
 
