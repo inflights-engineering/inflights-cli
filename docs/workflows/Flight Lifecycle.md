@@ -8,24 +8,25 @@ scheduled → in-progress → images-uploaded → processing → completed → d
                                           (also: cancelled, on-hold)
 ```
 
-## Who triggers each transition
+## Status transitions
 
-| From → To | Who | Command |
-|-----------|-----|---------|
-| (new) → `scheduled` | System (on quote confirm or order) | automatic |
-| `scheduled` → `in-progress` | Pilot | `inflights flight status <id> in-progress` |
-| `in-progress` → `images-uploaded` | Pilot | `inflights upload images <id> <path>` (auto) |
-| `images-uploaded` → `processing` | Processor | `inflights flight status <id> processing` |
-| `processing` → `completed` | Processor | `inflights upload data <id> <path>` (auto) |
-| `completed` → `delivered` | System / Admin | automatic or manual |
-| any → `cancelled` | Customer / Admin | `inflights flight status <id> cancelled` |
-| any → `on-hold` | Any linked role | `inflights flight status <id> on-hold` |
+All transitions are automatic unless noted otherwise. The system updates the status when the corresponding action is performed.
+
+| From → To                         | Trigger                                          | Status update                                         |
+| --------------------------------- | ------------------------------------------------ | ----------------------------------------------------- |
+| (new) → `scheduled`               | Quote confirmed or order created                 | automatic                                             |
+| `scheduled` → `in-progress`       | Pilot starts the mission                         | automatic                                             |
+| `in-progress` → `images-uploaded` | Pilot uploads images (`inflights upload images`) | automatic                                             |
+| `images-uploaded` → `processing`  | Processor begins work                            | automatic                                             |
+| `processing` → `completed`        | Processor marks as done                          | **manual** — `inflights flight status <id> completed` |
+| `completed` → `delivered`         | Deliverables sent to customer                    | automatic                                             |
+| any → `cancelled`                 | Admin or customer cancels the flight             | **manual** — `inflights flight status <id> cancelled` |
+
 
 ## Assigning people
 
-Before a flight can progress, it needs a pilot and processor:
+Before a flight can progress, it needs a pilot:
 
 ```bash
 inflights flight assign-pilot FL-1055 pilot-xavier
-inflights flight assign-processor FL-1055 proc-anna
 ```
