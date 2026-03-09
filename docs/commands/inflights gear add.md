@@ -1,33 +1,25 @@
 # inflights gear add
 
-Register a new piece of equipment (drone, camera, sensor) to your profile.
+Select equipment from the inflights predefined list and add it to your pilot profile.
 
 ## Usage
 
 ```bash
-inflights gear add [options]
+inflights gear add <equipmentTypeId>
 ```
-
-## Options
-
-| Flag | Description | Required |
-|------|-------------|----------|
-| `--type <type>` | `drone`, `camera`, `sensor`, `other` | yes |
-| `--model <model>` | Model name | yes |
-| `--serial <serial>` | Serial number | no |
-| `--notes <text>` | Additional details | no |
 
 ## Example
 
 ```bash
-inflights gear add --type drone --model "DJI Matrice 350" --serial SN-12345
-# → Gear GR-04 registered.
+inflights gear add EQ-001
+# → Equipment "DJI Phantom 4 RTK" added to your profile.
 ```
 
 ## API
 
 ```
-POST /v1/gear
+POST /equipments
+Body: { "equipment_type_id": 1 }
 ```
 
 ## Roles

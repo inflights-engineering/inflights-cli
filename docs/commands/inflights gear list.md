@@ -1,26 +1,39 @@
 # inflights gear list
 
-List equipment registered to your profile.
+List all available equipment on the inflights platform.
 
 ## Usage
 
 ```bash
-inflights gear list [--format table|json]
+inflights gear list [--type <type>] [--format table|json]
 ```
 
-## Output
+## Options
+
+| Flag              | Description                                              |
+| ----------------- | -------------------------------------------------------- |
+| `--type <type>`   | Filter by category: `drone`, `payload`, `drone_and_payload`, `gnss_receiver` |
+| `--format <fmt>`  | Output format: `table` (default) or `json`               |
+
+## Example
+
+```bash
+inflights gear list --type drone
+```
 
 ```
-ID       TYPE     MODEL               SERIAL
-GR-01    drone    DJI Matrice 350     SN-12345
-GR-02    camera   MicaSense RedEdge   SN-67890
-GR-03    drone    DJI Mavic 3E        SN-11223
+ID       CATEGORY   NAME                          DRONE TYPE    SENSOR TYPES
+EQ-001   drone      DJI Phantom 4 RTK             rotary_wing   rolling_shutter
+EQ-002   drone      DJI M300 + Zenmuse P1         rotary_wing   global_shutter
+EQ-003   drone      Wingtra One GEN II            fixed_wing    global_shutter
+EQ-004   drone      senseFly eBee X               fixed_wing    global_shutter
+EQ-005   drone      Autel EVO II Pro              rotary_wing   rolling_shutter
 ```
 
 ## API
 
 ```
-GET /v1/gear
+GET /equipment_types
 ```
 
 ## Roles
