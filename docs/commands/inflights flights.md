@@ -10,13 +10,13 @@ inflights flights [options]
 
 ## Options
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--geo <geofence>` | Filter by geofence (WKT or bounding box) | `--geo "POLYGON((-80 25,-80 26,-79 26,-79 25,-80 25))"` |
-| `--daterange <range>` | Filter by date range | `--daterange 2026-01-01:2026-03-01` |
-| `--status <status>` | Filter by flight status | `--status scheduled` |
-| `--role <role>` | Filter by your role on the flight | `--role pilot` |
-| `--format <fmt>` | Output format: `table` (default), `json`, `csv` | `--format json` |
+| Flag                      | Description                | Example                 |
+| ------------------------- | -------------------------- | ----------------------- |
+| `--location <location>`   | Filter by location         | `--location brussels`   |
+| `--status <status>`       | Filter by flight status    | `--status scheduled`    |
+| `--number <number>`       | Search by flight number    | `--number FL234`        |
+| `--reference <reference>` | Search by flight reference | `--reference Basic-fit` |
+
 
 ## Example
 

@@ -5,7 +5,7 @@ Show details of a specific flight.
 ## Usage
 
 ```bash
-inflights flight show <flightId>
+inflights flight show <flight publicUid>
 ```
 
 ## Output

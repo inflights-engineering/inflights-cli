@@ -15,7 +15,7 @@ inflights quote confirm QT-2091
 # → QT-2091 confirmed. Flight FL-1055 created.
 ```
 
-Confirming a quote may automatically create a flight record.
+Confirming a quote should automatically create a flight record.
 
 ## API
 
