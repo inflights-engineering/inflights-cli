@@ -15,7 +15,6 @@ All requests include `Authorization: Bearer <token>`.
 
 | Command | Method | Endpoint |
 |---------|--------|----------|
-| `inflights quote request` | POST | `/quotes` |
 | `inflights quotes` | GET | `/quotes?assignee=me` |
 | `inflights quote show <id>` | GET | `/quotes/<id>` |
 | `inflights quote assign <id> <user>` | PATCH | `/quotes/<id>/assign` |

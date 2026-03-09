@@ -1,4 +1,4 @@
-# Requesting a Quote
+# Ordering a Flight
 
 End-to-end workflow from "I need drone data" to a confirmed flight mission.
 
@@ -7,9 +7,9 @@ End-to-end workflow from "I need drone data" to a confirmed flight mission.
 ```
 Customer                          Platform                    Pilot
    │                                 │                           │
-   ├─ inflights quote request ──────►│                           │
-   │   --geo site.geojson            │                           │
-   │   --product "Roof Mapping"      │  QT-2091 created          │
+   ├─ inflights order ─────────────►│                           │
+   │   SV-01 --geo site.geojson     │                           │
+   │   --location 50.85,4.38        │  Quote QT-2091 created    │
    │                                 │                           │
    │                                 │  (inflights prices it)    │
    │                                 │                           │
@@ -31,10 +31,10 @@ Customer                          Platform                    Pilot
 
 ## Use case example
 
-> "Hey, I need drone images of this warehouse roof. Can you get a quote from @inflights?"
+> "Hey, I need drone images of this warehouse roof."
 
 ```bash
-inflights quote request --geo warehouse.geojson --product "Roof Mapping with CAD" --notes "Flat roof, 2000 sqm, need by end of month"
+inflights order SV-02 --geo warehouse.geojson --location 50.85,4.38 --notes "Flat roof, 2000 sqm"
 ```
 
 Inflights reviews and prices the quote. Once priced, the customer confirms it:

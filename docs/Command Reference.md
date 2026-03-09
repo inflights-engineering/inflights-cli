@@ -16,7 +16,6 @@ Every `inflights` command grouped by domain.
 
 | Command | Description |
 |---------|-------------|
-| [[inflights quote request]] | Request a new quote |
 | [[inflights quote assign]] | Assign a quote to a user for review |
 | [[inflights quotes]] | List quotes assigned to you |
 | [[inflights quote show]] | Show details of a specific quote |
