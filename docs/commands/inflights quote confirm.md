@@ -12,10 +12,10 @@ inflights quote confirm <quoteId>
 
 ```bash
 inflights quote confirm QT-2091
-# → QT-2091 confirmed. Flight FL-1055 created.
+# → QT-2091 confirmed. Proposal PR-401 sent to pilot.
 ```
 
-Confirming a quote should automatically create a flight record.
+Confirming a quote creates a proposal for an assigned pilot. Once the pilot accepts, a flight is created.
 
 ## API
 
