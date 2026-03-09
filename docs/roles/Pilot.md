@@ -15,7 +15,6 @@ A pilot selects their equipment from the platform list, flies missions, and uplo
 - [[inflights proposal reject]] — reject a proposal with a reason
 - [[inflights flights]] — see assigned flights
 - [[inflights flight show]] — check flight details and area
-- [[inflights flight status]] — update status (e.g. `in-progress`)
 - [[inflights flight add]] — register a flight done outside the platform
 - [[inflights upload images]] — upload drone images after a flight
 
