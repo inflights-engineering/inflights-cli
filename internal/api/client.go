@@ -23,7 +23,8 @@ type APIError struct {
 }
 
 type ErrorResponse struct {
-	Error APIError `json:"error"`
+	Error             APIError `json:"error"`
+	FullErrorMessages []string `json:"full_error_messages"`
 }
 
 // NewUnauthenticated creates a client without auth (for login flow).
@@ -100,7 +101,11 @@ func (c *Client) do(method, path string, body any) ([]byte, error) {
 	if resp.StatusCode >= 400 {
 		var errResp ErrorResponse
 		if json.Unmarshal(respBody, &errResp) == nil && errResp.Error.Message != "" {
-			return nil, fmt.Errorf("API error (%d): %s", resp.StatusCode, errResp.Error.Message)
+			msg := errResp.Error.Message
+			for _, detail := range errResp.FullErrorMessages {
+				msg += "\n  - " + detail
+			}
+			return nil, fmt.Errorf("API error (%d): %s", resp.StatusCode, msg)
 		}
 		return nil, fmt.Errorf("API error (%d): %s", resp.StatusCode, string(respBody))
 	}
