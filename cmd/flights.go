@@ -31,7 +31,7 @@ Valid statuses:
 }
 
 var flightShowCmd = &cobra.Command{
-	Use:   "flight [id]",
+	Use:   "flight [id or public-uid]",
 	Short: "Show flight details",
 	Args:  cobra.ExactArgs(1),
 	RunE:  runFlightShow,
@@ -76,17 +76,23 @@ type flight struct {
 
 type flightDetail struct {
 	flight
-	FlownAt         string       `json:"flown_at"`
-	CompletedAt     string       `json:"completed_at"`
-	CancelledAt     string       `json:"cancelled_at"`
-	DescriptionUser string       `json:"description_user"`
-	Reference       string       `json:"reference"`
-	Pilot           *flightActor `json:"pilot"`
-	Customer        *flightActor `json:"customer"`
+	FlownAt         string              `json:"flown_at"`
+	CompletedAt     string              `json:"completed_at"`
+	CancelledAt     string              `json:"cancelled_at"`
+	DescriptionUser string              `json:"description_user"`
+	Reference       string              `json:"reference"`
+	Pilot           *flightActor        `json:"pilot"`
+	Customer        *flightActor        `json:"customer"`
+	Deliverables    []flightDeliverable `json:"deliverables"`
 }
 
 type flightActor struct {
 	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type flightDeliverable struct {
+	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
 
@@ -178,6 +184,14 @@ func runFlightShow(cmd *cobra.Command, args []string) error {
 	}
 	if f.Customer != nil {
 		output.Print("Customer:", f.Customer.Name)
+	}
+	if len(f.Deliverables) > 0 {
+		fmt.Println()
+		rows := make([][]string, len(f.Deliverables))
+		for i, d := range f.Deliverables {
+			rows[i] = []string{fmt.Sprintf("%d", d.ID), d.Name}
+		}
+		output.Table([]string{"Deliverable ID", "Name"}, rows)
 	}
 	return nil
 }
