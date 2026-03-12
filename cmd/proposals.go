@@ -16,17 +16,40 @@ var proposalListCmd = &cobra.Command{
 	RunE:  runProposalList,
 }
 
+var proposalCmd = &cobra.Command{
+	Use:   "proposal",
+	Short: "Manage a proposal",
+}
+
 var proposalShowCmd = &cobra.Command{
-	Use:   "proposal [id]",
+	Use:   "show [id]",
 	Short: "Show proposal details",
 	Args:  cobra.ExactArgs(1),
 	RunE:  runProposalShow,
 }
 
+var proposalAcceptCmd = &cobra.Command{
+	Use:   "accept [id]",
+	Short: "Accept a proposal",
+	Args:  cobra.ExactArgs(1),
+	RunE:  runProposalAccept,
+}
+
+var proposalRejectCmd = &cobra.Command{
+	Use:   "reject [id]",
+	Short: "Reject a proposal",
+	Args:  cobra.ExactArgs(1),
+	RunE:  runProposalReject,
+}
+
 func init() {
 	proposalListCmd.Flags().String("status", "", "Filter by status")
+	proposalRejectCmd.Flags().String("reason", "", "Reason for rejection")
+	proposalCmd.AddCommand(proposalShowCmd)
+	proposalCmd.AddCommand(proposalAcceptCmd)
+	proposalCmd.AddCommand(proposalRejectCmd)
 	rootCmd.AddCommand(proposalListCmd)
-	rootCmd.AddCommand(proposalShowCmd)
+	rootCmd.AddCommand(proposalCmd)
 }
 
 type proposal struct {
@@ -108,6 +131,59 @@ func runProposalList(cmd *cobra.Command, args []string) error {
 		}
 	}
 	output.Table([]string{"ID", "Status", "Flight", "Price"}, rows)
+	return nil
+}
+
+func runProposalAccept(cmd *cobra.Command, args []string) error {
+	client, err := api.NewAuthenticated()
+	if err != nil {
+		return err
+	}
+
+	body, err := client.Post("/proposals/"+args[0]+"/accept", nil)
+	if err != nil {
+		return fmt.Errorf("failed to accept proposal: %w", err)
+	}
+
+	var p proposalDetail
+	if err := json.Unmarshal(body, &p); err != nil {
+		return fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	if output.JSONOutput {
+		output.JSON(p)
+	} else {
+		fmt.Printf("Proposal %s accepted.\n", p.ID)
+	}
+	return nil
+}
+
+func runProposalReject(cmd *cobra.Command, args []string) error {
+	client, err := api.NewAuthenticated()
+	if err != nil {
+		return err
+	}
+
+	reqBody := map[string]string{}
+	if reason, _ := cmd.Flags().GetString("reason"); reason != "" {
+		reqBody["reason"] = reason
+	}
+
+	body, err := client.Post("/proposals/"+args[0]+"/reject", reqBody)
+	if err != nil {
+		return fmt.Errorf("failed to reject proposal: %w", err)
+	}
+
+	var p proposalDetail
+	if err := json.Unmarshal(body, &p); err != nil {
+		return fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	if output.JSONOutput {
+		output.JSON(p)
+	} else {
+		fmt.Printf("Proposal %s rejected.\n", p.ID)
+	}
 	return nil
 }
 

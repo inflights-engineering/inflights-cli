@@ -173,6 +173,91 @@ func TestProposals_NotLoggedIn(t *testing.T) {
 	}
 }
 
+func TestProposalAccept(t *testing.T) {
+	// Arrange
+	var gotPath, gotMethod string
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotPath = r.URL.Path
+		gotMethod = r.Method
+		json.NewEncoder(w).Encode(sampleProposalDetail)
+	}))
+	defer server.Close()
+	setupTestEnv(t, server)
+	saveTestCredentials(t, "test-token")
+
+	// Act
+	out := captureOutput(t, func() {
+		err := runProposalAccept(proposalAcceptCmd, []string{"proposal-uuid-10"})
+		if err != nil {
+			t.Fatalf("got error %v, want nil", err)
+		}
+	})
+
+	// Assert
+	if gotMethod != "POST" {
+		t.Errorf("got method %q, want POST", gotMethod)
+	}
+	if gotPath != "/proposals/proposal-uuid-10/accept" {
+		t.Errorf("got path %q, want /proposals/proposal-uuid-10/accept", gotPath)
+	}
+	if !strings.Contains(out, "accepted") {
+		t.Errorf("output = %q, want it to contain 'accepted'", out)
+	}
+}
+
+func TestProposalReject(t *testing.T) {
+	tests := []struct {
+		name       string
+		reason     string
+		wantReason string
+	}{
+		{
+			name:   "without reason",
+			reason: "",
+		},
+		{
+			name:       "with reason",
+			reason:     "Schedule conflict",
+			wantReason: "Schedule conflict",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Arrange
+			var gotBody map[string]string
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				json.NewDecoder(r.Body).Decode(&gotBody)
+				json.NewEncoder(w).Encode(sampleProposalDetail)
+			}))
+			defer server.Close()
+			setupTestEnv(t, server)
+			saveTestCredentials(t, "test-token")
+
+			if tt.reason != "" {
+				proposalRejectCmd.Flags().Set("reason", tt.reason)
+				defer proposalRejectCmd.Flags().Set("reason", "")
+			}
+
+			// Act
+			out := captureOutput(t, func() {
+				err := runProposalReject(proposalRejectCmd, []string{"proposal-uuid-10"})
+				if err != nil {
+					t.Fatalf("got error %v, want nil", err)
+				}
+			})
+
+			// Assert
+			if !strings.Contains(out, "rejected") {
+				t.Errorf("output = %q, want it to contain 'rejected'", out)
+			}
+			if tt.wantReason != "" && gotBody["reason"] != tt.wantReason {
+				t.Errorf("got reason %q, want %q", gotBody["reason"], tt.wantReason)
+			}
+		})
+	}
+}
+
 func TestProposalShow(t *testing.T) {
 	// Arrange
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
