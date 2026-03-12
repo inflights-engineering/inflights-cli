@@ -25,5 +25,8 @@ go.work.sum
 # Obsidian
 docs/.obsidian/
 
+# Scratch / local files
+scratch/
+
 # OS
 .DS_Store
