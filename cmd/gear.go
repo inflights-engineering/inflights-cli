@@ -34,10 +34,26 @@ var gearMineCmd = &cobra.Command{
 	RunE:  runGearMine,
 }
 
+var gearAddCmd = &cobra.Command{
+	Use:   "add [equipment-type-id]",
+	Short: "Add equipment to your profile",
+	Args:  cobra.ExactArgs(1),
+	RunE:  runGearAdd,
+}
+
+var gearRemoveCmd = &cobra.Command{
+	Use:   "remove [equipment-id]",
+	Short: "Remove equipment from your profile",
+	Args:  cobra.ExactArgs(1),
+	RunE:  runGearRemove,
+}
+
 func init() {
 	gearListCmd.Flags().String("category", "", "Filter by category (drone, payload, drone_and_payload, gnss_receiver)")
 	gearCmd.AddCommand(gearListCmd)
 	gearCmd.AddCommand(gearMineCmd)
+	gearCmd.AddCommand(gearAddCmd)
+	gearCmd.AddCommand(gearRemoveCmd)
 	rootCmd.AddCommand(gearCmd)
 }
 
@@ -147,5 +163,55 @@ func runGearMine(cmd *cobra.Command, args []string) error {
 		}
 	}
 	output.Table([]string{"ID", "Brand", "Product", "Price/ha", "Min Price"}, rows)
+	return nil
+}
+
+func runGearAdd(cmd *cobra.Command, args []string) error {
+	client, err := api.NewAuthenticated()
+	if err != nil {
+		return err
+	}
+
+	body, err := client.Post("/equipments", map[string]string{
+		"equipment_type_id": args[0],
+	})
+	if err != nil {
+		return fmt.Errorf("failed to add equipment: %w", err)
+	}
+
+	var e equipment
+	if err := json.Unmarshal(body, &e); err != nil {
+		return fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	if output.JSONOutput {
+		output.JSON(e)
+	} else {
+		brand, product := "", ""
+		if e.EquipmentType != nil {
+			brand = e.EquipmentType.Brand
+			product = e.EquipmentType.ProductName
+		}
+		fmt.Printf("Added %s %s to your equipment.\n", brand, product)
+	}
+	return nil
+}
+
+func runGearRemove(cmd *cobra.Command, args []string) error {
+	client, err := api.NewAuthenticated()
+	if err != nil {
+		return err
+	}
+
+	_, err = client.Delete("/equipments/" + args[0])
+	if err != nil {
+		return fmt.Errorf("failed to remove equipment: %w", err)
+	}
+
+	if output.JSONOutput {
+		output.JSON(map[string]string{"status": "removed", "id": args[0]})
+	} else {
+		fmt.Println("Equipment removed.")
+	}
 	return nil
 }
