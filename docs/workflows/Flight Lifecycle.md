@@ -3,30 +3,31 @@
 A flight moves through these statuses:
 
 ```
-scheduled → in-progress → images-uploaded → processing → completed → delivered
-                                                 │
-                                          (also: cancelled, on-hold)
+needs_flight_proposal → proposal_pending → price_not_final → quote_sent →
+pilot_found → flight_scheduled → flight_flown → raw_data_uploaded →
+insights_generated → done
 ```
 
 ## Status transitions
 
-All transitions are automatic unless noted otherwise. The system updates the status when the corresponding action is performed.
+All transitions are automatic. The system updates the status when the corresponding action is performed.
 
-| From → To                         | Trigger                                          | Status update                                         |
-| --------------------------------- | ------------------------------------------------ | ----------------------------------------------------- |
-| (new) → `scheduled`               | Quote confirmed or order created                 | automatic                                             |
-| `scheduled` → `in-progress`       | Pilot starts the mission                         | automatic                                             |
-| `in-progress` → `images-uploaded` | Pilot uploads images (`inflights upload images`) | automatic                                             |
-| `images-uploaded` → `processing`  | Processor begins work                            | automatic                                             |
-| `processing` → `completed`        | Processor marks as done                          | **manual** — `inflights flight status <id> completed` |
-| `completed` → `delivered`         | Deliverables sent to customer                    | automatic                                             |
-| any → `cancelled`                 | Admin or customer cancels the flight             | **manual** — `inflights flight status <id> cancelled` |
-
+| From → To | Trigger |
+|-----------|---------|
+| (new) → `needs_flight_proposal` | Flight ordered |
+| → `proposal_pending` | Proposal sent to pilot |
+| → `pilot_found` | Pilot accepts proposal |
+| → `flight_scheduled` | Flight date set |
+| → `flight_flown` | Pilot completes mission |
+| → `raw_data_uploaded` | Pilot uploads images (`inflights upload images`) |
+| → `insights_generated` | Processing complete |
+| → `done` | Invoice created |
 
 ## Assigning people
 
-Before a flight can progress, it needs a pilot:
+Pilots are assigned through the proposal system. A proposal is sent to a pilot, who accepts or rejects it:
 
 ```bash
-inflights flight assign-pilot FL-1055 pilot-xavier
+inflights proposal accept PR-401
+# → Proposal accepted. Flight FL-1055 assigned.
 ```

@@ -12,8 +12,8 @@ inflights quotes [options]
 
 | Flag | Description |
 |------|-------------|
-| `--status <status>` | Filter: `pending`, `reviewed`, `confirmed`, `expired` |
-| `--format <fmt>` | `table` (default), `json`, `csv` |
+| `--status <status>` | Filter: `pending`, `accepted` |
+| `--json` | Output as JSON |
 
 ## Example
 
@@ -22,15 +22,15 @@ inflights quotes --status pending
 ```
 
 ```
-ID       AREA              INSIGHT       STATUS    CUSTOMER
-QT-2091  50-acre vineyard  orthomosaic   pending   acme-corp
-QT-2088  solar farm B      thermal       pending   greenfield-inc
+NUMBER    FLIGHT     STATUS    TYPE       PRICE
+QT-2091   FL-1042    pending   quote      500.00€
+QT-2088   FL-1038    pending   estimate   —
 ```
 
 ## API
 
 ```
-GET /v1/quotes?assignee=me&status=...
+GET /v1/quotes?status=...
 ```
 
 ## Roles

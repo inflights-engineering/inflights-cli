@@ -8,13 +8,12 @@ End-to-end workflow from "I need drone data" to a confirmed flight mission.
 Customer                          Platform                    Pilot
    │                                 │                           │
    ├─ inflights order ─────────────►│                           │
-   │   SV-01 --geo site.geojson     │                           │
-   │   --location 50.85,4.38        │  Quote QT-2091 created    │
+   │   area.geojson --service 3     │  Flight created            │
    │                                 │                           │
    │                                 │  (inflights prices it)    │
    │                                 │                           │
    ├─ inflights quotes ────────────►│                           │
-   │   (sees QT-2091 with price)     │                           │
+   │   (sees quote with price)       │                           │
    │                                 │                           │
    ├─ inflights quote confirm ──────►│                           │
    │   QT-2091                       │  → Proposal PR-401        │
@@ -25,7 +24,7 @@ Customer                          Platform                    Pilot
    │                                 │  inflights proposal       │
    │                                 │    accept PR-401 ─────────┤
    │                                 │                           │
-   │                                 │  → Flight FL-1055 created │
+   │                                 │  → Flight FL-1055 active  │
    │                                 │                           │
 ```
 
@@ -34,7 +33,7 @@ Customer                          Platform                    Pilot
 > "Hey, I need drone images of this warehouse roof."
 
 ```bash
-inflights order SV-02 --geo warehouse.geojson --location 50.85,4.38 --notes "Flat roof, 2000 sqm"
+inflights order warehouse.geojson --service 2 --description "Flat roof, 2000 sqm"
 ```
 
 Inflights reviews and prices the quote. Once priced, the customer confirms it:
@@ -47,7 +46,7 @@ A proposal is then sent to an assigned pilot. The pilot reviews and accepts it:
 
 ```bash
 inflights proposal accept PR-401
-# → Flight FL-1055 created.
+# → Proposal PR-401 accepted.
 ```
 
 If the pilot rejects the proposal, inflights follows up to negotiate or reassign to another pilot.

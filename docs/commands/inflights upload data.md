@@ -1,68 +1,58 @@
 # inflights upload data
 
-Upload processed data (deliverables) for a given flight. Can upload a single deliverable or an entire directory.
+Upload processed deliverables to a flight.
 
 ## Usage
 
 ```bash
-inflights upload data <flightId> <path> [options]
+inflights upload data <flight-id or public-uid> <files...> [options]
 ```
 
 ## Options
 
-| Flag             | Description                                            |
-| ---------------- | ------------------------------------------------------ |
-| `--type <type>`  | Deliverable type (required when uploading a single file) |
+| Flag | Description |
+|------|-------------|
+| `-c, --concurrency <n>` | Number of parallel uploads (default: 5) |
+| `--deliverable <id>` | Deliverable type ID (see `inflights flight <uid>` for available types) |
+| `--json` | Output as JSON |
 
-### Available deliverable types
+## Upload flow
 
-| Type                  | Description                                             |
-| --------------------- | ------------------------------------------------------- |
-| `point_cloud`         | Point Cloud from Photogrammetry - 3D                    |
-| `point_cloud_lidar`   | Point Cloud from LIDAR - 3D                             |
-| `textured_mesh`       | Textured Mesh - 3D                                      |
-| `orthomosaic`         | Orthomosaic - 2D                                        |
-| `dsm`                 | Digital Surface Model - 2.5D                            |
-| `cad_roof`            | CAD Model Roof - 3D                                     |
-| `cad_terrain`         | CAD Model Terrain - 3D                                  |
-| `cad_power_pole`      | CAD Model - Power Pole                                  |
-| `surface_xml`         | Surface data XML - 3D                                   |
-| `surface_points`      | Surface Points (Landxml/CSV)                            |
-| `survey_report`       | Survey Report                                           |
-| `stockpile_report`    | Stockpile Volumetric report                             |
-| `thermal_report`      | Thermal Report                                          |
-| `solar_report`        | Solar Site Infrared Inspection report                   |
-| `ndvi`                | NDVI maps (index maps)                                  |
-| `collision_analysis`  | Collision analysis between power grid and vegetation    |
-| `multispectral`       | Multispectral Images                                    |
-| `aerial_media`        | Aerial pictures and movies                              |
+Each file goes through a 3-step process:
 
-## Examples
+1. **Presign** — `POST /flights/:id/uploads/presign` → get S3 upload URL
+2. **Upload to S3** — multipart POST to presigned URL
+3. **Confirm** — `POST /flights/:id/uploads/confirm` with file info
 
-Upload a single deliverable:
+## Example
 
 ```bash
-inflights upload data FL-1042 ./orthomosaic.tif --type orthomosaic
-# → Uploading orthomosaic (450 MB)…
-# → ████████████████████ 100%
-# → FL-1042 orthomosaic uploaded.
+inflights upload data FL-1042 ./orthomosaic.tif --deliverable 3
+# → Uploading 1 files...
+# → [1/1] orthomosaic.tif — done
+# → 1/1 files uploaded.
 ```
 
-Upload all processed data at once:
+Upload multiple files:
 
 ```bash
-inflights upload data FL-1042 ./processed-output/
-# → Uploading processed data (1.8 GB)…
-# → ████████████████████ 100%
-# → FL-1042 processed data uploaded. Status → completed.
+inflights upload data FL-1042 report.pdf pointcloud.las -c 10
+```
+
+To see available deliverable type IDs for a flight:
+
+```bash
+inflights flight FL-1042
+# → Shows deliverable types table with IDs
 ```
 
 ## API
 
-```
-POST /flights/:flightId/data
-Content-Type: multipart/form-data
-```
+| Step | Method | Endpoint |
+|------|--------|----------|
+| Presign | POST | `/flights/:id/uploads/presign` |
+| Upload | POST | S3 presigned URL |
+| Confirm | POST | `/flights/:id/uploads/confirm` |
 
 ## Roles
 
