@@ -7,7 +7,7 @@ Opens a browser to `inflights.com/login/:token` where `:token` is a locally gene
 ```bash
 inflights login
 # → Opening browser… https://inflights.com/login/a3f1c9e2-...
-# → Authenticated as xavier@inflights.com (customer)
+# → Authenticated as user@example.com (customer)
 ```
 
 **Token storage:** `~/.inflights/credentials` (JSON, `0600` permissions).
@@ -24,7 +24,7 @@ Prints the current authenticated user, email, and role(s).
 
 ```bash
 inflights whoami
-# → xavier@inflights.com  roles: customer, pilot
+# → user@example.com  roles: customer, pilot
 ```
 
 ## API pattern

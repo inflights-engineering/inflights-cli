@@ -265,9 +265,9 @@ func TestWhoami(t *testing.T) {
 		json.NewEncoder(w).Encode(map[string]any{
 			"user": map[string]string{
 				"id":         "user-uuid",
-				"email":      "elias@inflights.com",
-				"first_name": "Elias",
-				"last_name":  "Music",
+				"email":      "user@example.com",
+				"first_name": "Jane",
+				"last_name":  "Doe",
 				"role":       "admin",
 			},
 		})
@@ -285,7 +285,7 @@ func TestWhoami(t *testing.T) {
 	})
 
 	// Assert
-	if !bytes.Contains([]byte(out), []byte("elias@inflights.com")) {
+	if !bytes.Contains([]byte(out), []byte("user@example.com")) {
 		t.Errorf("output = %q, want it to contain email", out)
 	}
 	if !bytes.Contains([]byte(out), []byte("admin")) {

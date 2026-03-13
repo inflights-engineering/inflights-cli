@@ -11,7 +11,7 @@ inflights whoami
 ## Output
 
 ```
-xavier@inflights.com  roles: customer, pilot
+user@example.com  roles: customer, pilot
 ```
 
 ## API
