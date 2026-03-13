@@ -30,3 +30,6 @@ scratch/
 
 # OS
 .DS_Store
+
+# claude setup
+.claude/
