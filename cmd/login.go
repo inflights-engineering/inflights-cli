@@ -93,7 +93,7 @@ func runLogin(cmd *cobra.Command, args []string) error {
 		if output.JSONOutput {
 			output.JSON(exchangeResp.User)
 		} else {
-			fmt.Printf("Authenticated as %s (%s)\n", exchangeResp.User.Email, exchangeResp.User.Role)
+			fmt.Printf("Authenticated as %s\n", exchangeResp.User.Email)
 		}
 		return nil
 	}

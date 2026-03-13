@@ -2,7 +2,7 @@
 
 ## `inflights login`
 
-Opens a browser to `inflights.com/login/:token` where `:token` is a locally generated UUID. The CLI polls or listens for the token exchange to complete, then stores a bearer token in `~/.inflights/credentials`.
+Opens a browser to `inflights.com/login/:token` where `:token` is a locally generated UUID. If the user is already signed in on the browser, a confirmation page asks them to authorize the CLI as that account or sign in as someone else. The CLI polls for the token exchange to complete, then stores a bearer token in `~/.inflights/credentials`.
 
 ```bash
 inflights login
