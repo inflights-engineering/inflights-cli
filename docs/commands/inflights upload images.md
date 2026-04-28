@@ -57,12 +57,12 @@ inflights upload images FL-1042 ./photos/ -c 10
 
 ## API
 
-| Step | Method | Endpoint |
-|------|--------|----------|
-| Presign | POST | `/flights/:id/images/presign` |
-| Upload | POST | S3 presigned URL |
-| Confirm | POST | `/flights/:id/images/confirm` |
-| Finalize | POST | `/flights/:id/images/finalize` |
+| Step     | Method | Endpoint                       |
+| -------- | ------ | ------------------------------ |
+| Presign  | POST   | `/flights/:id/images/presign`  |
+| Upload   | POST   | S3 presigned URL               |
+| Confirm  | POST   | `/flights/:id/images/confirm`  |
+| Finalize | POST   | `/flights/:id/images/finalize` |
 
 ## Roles
 
